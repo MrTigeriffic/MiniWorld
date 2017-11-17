@@ -3,7 +3,7 @@ A demonstration of skill using Unity Engine 5.6 and technical skills between pla
 
 Email me: oranchad@gmail.com if you have any enquiries :)
 
-All items (except Audio) in the "3D & 2D & Audio" folder have been created by myself. 
+Ethan character model and animations and robot kyle were imported from Unity Asset Store 
 
 All code written by me is in the Logic folder. 
 
