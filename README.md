@@ -8,7 +8,9 @@ All items (except Audio) in the "3D & 2D & Audio" folder have been created by my
 All code written by me is in the Logic folder. 
 
 This scene so far is to demonstrate character movement and camera control in a thrid person control setup. The objective of the scene is to say out of sight from the Robot's (AI) line of sight but will patrol the scene otherwise. 
+
                           ______________________________________________________________
+                          
 Road Map: 
 
 To be added next will be a turret in the centre of the scene that will track the player while restricting the turret controls to create more realistic movement. 
