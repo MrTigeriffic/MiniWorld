@@ -42,7 +42,7 @@ public class AIEnemy : MonoBehaviour {
     public Transform PlayerTransform = null;
     public Transform PatrolDest = null;//get reference to Destination object
 
-    public float MaxFamage = 10f;
+    public float MaxDamage = 10f;
 
     //these co routines will have looping behaviors
     public IEnumerator AIPatrol()
@@ -52,7 +52,7 @@ public class AIEnemy : MonoBehaviour {
             ThisLineOfSight.Sensitiv = LineOfSight.SightSensitivity.SRTICT;
 
             ThisAgent.Resume();
-            ThisAgent.SetDestination(PatrolDest.position);
+            ThisAgent.SetDestination(PatrolDest.position);//set the position
             //while the destination object next position is set 
             while (ThisAgent.pathPending)
             {
@@ -72,15 +72,49 @@ public class AIEnemy : MonoBehaviour {
 	{
 		while (currentState == ENEMY_STATE.CHASE)
 		{
-			yield return null;
-		}
-		yield break;
+            ThisLineOfSight.Sensitiv = LineOfSight.SightSensitivity.LOOSE;
+            //chase to last known position
+            ThisAgent.Resume();
+            ThisAgent.SetDestination(ThisLineOfSight.LastknownSighting);
+            while(ThisAgent.pathPending)
+			    yield return null;
+
+            if (ThisAgent.remainingDistance <= ThisAgent.stoppingDistance)
+            {
+                ThisAgent.Stop();
+                if (!ThisLineOfSight.CanSeeTarget)
+                    CurrentState = ENEMY_STATE.PATROL;
+                else//reached destination and can see player, switch to attack
+                    CurrentState = ENEMY_STATE.ATTACK;
+
+                yield break;
+            }
+            //wait until next frame
+            yield return null;
+        }
+        
 	}
 	public IEnumerator AIAttack()
 	{
 		while (currentState == ENEMY_STATE.ATTACK)
 		{
-			yield return null;
+            ThisAgent.Resume();
+            ThisAgent.SetDestination(PlayerTransform.position);
+            while(ThisAgent.pathPending)
+			    yield return null;
+            //has player run away?
+            if(ThisAgent.remainingDistance > ThisAgent.stoppingDistance)
+            {
+                //Change to chase
+                CurrentState = ENEMY_STATE.CHASE;
+                yield break;
+            }
+            else
+            {
+                //attack
+                PlayerHealth.HealPoints -= MaxDamage * Time.deltaTime;
+            }
+            yield return null;
 		}
 		yield break;
 	}
@@ -102,8 +136,4 @@ public class AIEnemy : MonoBehaviour {
     void Update () {
 		ThisAgent.SetDestination(PatrolDest.position);
 	}
-}
-
-internal class Health
-{
 }
