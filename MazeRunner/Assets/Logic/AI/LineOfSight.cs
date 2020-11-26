@@ -75,7 +75,9 @@ public class LineOfSight : MonoBehaviour {
                 break;
         }
     }
-    private void OnTriggerStay(Collider other)//reference to the collider that enters the trigger
+    private void OnTriggerStay(Collider other)
+        //reference to the collider that enters the trigger
+        //Detect when the player controller has entered the AI collider 
     {
         //Debug.Log(other.name);
         UpdateSight();

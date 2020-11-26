@@ -113,6 +113,7 @@ public class AIEnemy : MonoBehaviour {
             {
                 //attack
                 PlayerHealth.HealPoints -= MaxDamage * Time.deltaTime;
+
             }
             yield return null;
 		}
