@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class AIEnemy : MonoBehaviour {
 
@@ -19,13 +20,17 @@ public class AIEnemy : MonoBehaviour {
 			switch (currentState)
 			{
 				case ENEMY_STATE.PATROL:
-					StartCoroutine(AIPatrol());
+                    aiText.text = "AI: " + currentState.ToString();
+                    //Debug.Log(currentState);
+                    StartCoroutine(AIPatrol());
 				break;
 				case ENEMY_STATE.CHASE:
-					StartCoroutine(AIChase());
+                    aiText.text = "AI: " + currentState.ToString();
+                    StartCoroutine(AIChase());
 				break;
 				case ENEMY_STATE.ATTACK:
-					StartCoroutine(AIAttack());
+                    aiText.text = "AI: " + currentState.ToString();
+                    StartCoroutine(AIAttack());
 				break;
 			}
 		}
@@ -37,11 +42,11 @@ public class AIEnemy : MonoBehaviour {
     private NavMeshAgent ThisAgent = null;
     private Transform ThisTransform = null;//npc transform
 
-
     public HealthPoints PlayerHealth = null;
     public Transform PlayerTransform = null;
     public Transform PatrolDest = null;//get reference to Destination object
 
+    public Text aiText = null;
     public float MaxDamage = 10f;
 
     //these co routines will have looping behaviors
@@ -50,7 +55,6 @@ public class AIEnemy : MonoBehaviour {
 		while(currentState == ENEMY_STATE.PATROL)
 		{
             ThisLineOfSight.Sensitiv = LineOfSight.SightSensitivity.SRTICT;
-
             ThisAgent.Resume();
             ThisAgent.SetDestination(PatrolDest.position);//set the position
             //while the destination object next position is set 
@@ -75,7 +79,7 @@ public class AIEnemy : MonoBehaviour {
             ThisLineOfSight.Sensitiv = LineOfSight.SightSensitivity.LOOSE;
             //chase to last known position
             ThisAgent.Resume();
-            ThisAgent.SetDestination(ThisLineOfSight.LastknownSighting);
+            ThisAgent.SetDestination(ThisLineOfSight.LastknownSighting); //NPC will go to last known position of the player and not the player itself
             while(ThisAgent.pathPending)
 			    yield return null;
 
@@ -113,7 +117,7 @@ public class AIEnemy : MonoBehaviour {
             {
                 //attack
                 PlayerHealth.HealPoints -= MaxDamage * Time.deltaTime;
-
+                
             }
             yield return null;
 		}
@@ -126,6 +130,7 @@ public class AIEnemy : MonoBehaviour {
         ThisLineOfSight = GetComponent<LineOfSight>();
         ThisTransform = GetComponent<Transform>();
         PlayerTransform = PlayerHealth.GetComponent<Transform>();
+        Text aiText = GetComponent<Text>();
 	}
 
     private void Start()
